@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -119,12 +119,12 @@ namespace Offline_Support
                 parsedScores[i].rank = rawJson.Remove(0, rawJson.IndexOf("rank\":\"") + 7);
                 parsedScores[i].rank = parsedScores[i].rank.Remove(parsedScores[i].rank.IndexOf("\""));
 
-                parsedScores[i].pp = rawJson.Remove(0, rawJson.IndexOf("pp\":\"") + 5);
-                parsedScores[i].pp = parsedScores[i].pp.Remove(parsedScores[i].pp.IndexOf("\""));
+                parsedScores[i].pp = rawJson.Remove(0, rawJson.IndexOf("pp\":") + 5);
+                if (parsedScores[i].pp.Remove(3) == "ull") parsedScores[i].pp = "0";
+                else parsedScores[i].pp = parsedScores[i].pp.Remove(parsedScores[i].pp.IndexOf("\""));
 
-                if (parsedScores[i].pp.Contains("."))
-                parsedScores[i].pp = (parsedScores[i].pp.Remove(parsedScores[i].pp.IndexOf("."),
-                parsedScores[i].pp.Length - parsedScores[i].pp.IndexOf("."))) + "pp";
+                if (parsedScores[i].pp.Contains(".")) parsedScores[i].pp = parsedScores[i].pp.Remove(parsedScores[i].pp.IndexOf("."));
+                parsedScores[i].pp += "pp";
 
                 parsedScores[i].replay_available = rawJson.Remove(0, rawJson.IndexOf("replay_available\":\"") + 19);
                 parsedScores[i].replay_available = parsedScores[i].replay_available.Remove(parsedScores[i].replay_available.IndexOf("\""));
@@ -155,7 +155,7 @@ namespace Offline_Support
         enum Mods
         {
             None = 0, NF = 1, EZ = 2, TD = 4, HD = 8, HR = 16, SD = 32, DT = 64,
-            RL = 128,HT = 256, NC = 512, FL = 1024, AT = 2048, SO = 4096, AP = 8192,
+            RL = 128, HT = 256, NC = 512, FL = 1024, AT = 2048, SO = 4096, AP = 8192,
             PF = 16384, Key4 = 32768, Key5 = 65536, Key6 = 131072, Key7 = 262144,
             Key8 = 524288, FI = 1048576, RD = 2097152, CM = 4194304, TP = 8388608,
             Key9 = 16777216, KeyCoop = 33554432, Key1 = 67108864, Key3 = 134217728,
