@@ -10,6 +10,6 @@ You can enable mod leaderboard with **Shift+DownArrow**.
 Then simply change mod combination in **osu!**.
 
 # ApiKey Security
-Offline Support stores encrypted version of your ApiKey.  
+Offline Support stores encrypted version of your osu! **api key**.  
 I highly recommend changing encryption key and building project yourself.  
-All new releases starting from v3 will have different api key from the source code.
+All new releases starting from v3 will have different **api key** from the source code.
