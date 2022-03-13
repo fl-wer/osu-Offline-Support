@@ -1,7 +1,7 @@
 # Offline Support
 Tool that displays scores from selected map, supports mod leaderboards, all game modes and has some extra features, should be used with 2 monitors and by offline players.
 
-![image](https://user-images.githubusercontent.com/101416707/158081407-c6cc79ce-dc0f-423a-a005-f495d266d2e7.png)
+![image](https://user-images.githubusercontent.com/101416707/158081541-7b74d169-bb26-454c-b199-349a48c52831.png)
 
 # Options
 You can right-click anywhere on the window and you will see options, eg below.  
