@@ -488,18 +488,14 @@ namespace Offline_Support
                     SignatureTemplate[] enabledModsSignature = new SignatureTemplate[1];
                     SignatureTemplate[] gameModeSignature = new SignatureTemplate[2];
 
+                    // ### signature groups
                     // they hold signature and offset that will be added so the address of
                     // signature + offset will hold the actual address of a pointer
-                    //mapIdSignature[0] = new SignatureTemplate("8B 4D D8 8B D3 E8 ?? ?? ?? ?? 8B", -0x04); // THIS ONE IS DODGY
                     mapIdSignature[0] = new SignatureTemplate("85 C0 74 05 33 D2 89 55 DC 53", 0x0C);
                     mapIdSignature[1] = new SignatureTemplate("8B CE 89 4D CC 8B 4D 08", 0x14);
-
-                    // they hold signature and offset that will be added so the address of
-                    // signature + offset will hold the actual address of a pointer
-                    //mapIdSignature[0] = new SignatureTemplate("8B 4D D8 8B D3 E8 ?? ?? ?? ?? 8B", -0x04); // THIS ONE IS DODGY
+                    
                     enabledModsSignature[0] = new SignatureTemplate("DB 85 38 FF FF FF 83", 0x0E);
 
-                    //mapIdSignature[0] = new SignatureTemplate("8B 4D D8 8B D3 E8 ?? ?? ?? ?? 8B", -0x04); // THIS ONE IS DODGY
                     gameModeSignature[0] = new SignatureTemplate("01 00 00 85 ?? ?? ?? ?? A1 ?? ?? ?? ?? C3", 0x09);
                     gameModeSignature[1] = new SignatureTemplate("55 8B EC 56 8B F1 39 15", 0x08);
 
