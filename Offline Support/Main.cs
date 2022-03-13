@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -36,7 +36,7 @@ namespace Offline_Support
         public Main() { InitializeComponent(); }
 
         // build version
-        public static string softwareVersion = "1";
+        public static string softwareVersion = "2";
 
         // information file names, these are files that store all
         // kind of information and are saved in software default folder in variable below
@@ -112,7 +112,7 @@ namespace Offline_Support
                 }
             }
         }
-        
+
         // goes to next page and reloads forms with shift + right arrow
         void hotKeyNextPage(object sender, HotKeyEventArgs e)
         {
@@ -493,7 +493,7 @@ namespace Offline_Support
                     // signature + offset will hold the actual address of a pointer
                     mapIdSignature[0] = new SignatureTemplate("85 C0 74 05 33 D2 89 55 DC 53", 0x0C);
                     mapIdSignature[1] = new SignatureTemplate("8B CE 89 4D CC 8B 4D 08", 0x14);
-                    
+
                     enabledModsSignature[0] = new SignatureTemplate("DB 85 38 FF FF FF 83", 0x0E);
 
                     gameModeSignature[0] = new SignatureTemplate("01 00 00 85 ?? ?? ?? ?? A1 ?? ?? ?? ?? C3", 0x09);
