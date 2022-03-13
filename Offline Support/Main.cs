@@ -393,7 +393,11 @@ namespace Offline_Support
                     usernameForm[formCounter].Text = scores[i].username;
                     scoreForm[formCounter].Text = scores[i].score;
                     modsForm[formCounter].Text = scores[i].enabled_mods;
-                    accForm[formCounter].Text = scores[i].countmiss + "x " + scores[i].accuracy;
+
+                    // if there are misses, display them next to accuracy, looks ok and it's extra info
+                    if (scores[i].countmiss != "0") accForm[formCounter].Text = scores[i].countmiss + "x " + scores[i].accuracy;
+                    else accForm[formCounter].Text = scores[i].accuracy;
+
                     ppForm[formCounter].Text = scores[i].pp;
 
                     // changing rank image according to the rank of the score
