@@ -1,4 +1,4 @@
-﻿namespace Offline_Support
+namespace Offline_Support
 {
     partial class Main
     {
@@ -1012,7 +1012,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Main";
-            this.Text = "Offline Support v1";
+            this.Text = "Offline Support";
             this.Load += new System.EventHandler(this.Main_Load);
             this.quickSupportContextMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.rank0)).EndInit();
