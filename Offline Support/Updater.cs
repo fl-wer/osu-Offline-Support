@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -43,10 +44,7 @@ namespace Offline_Support
                 DialogResult dialogResult = MessageBox.Show("New version available, open download link?", "Update", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
                 // it will open github page with relese download link for new version
-                if (dialogResult == DialogResult.Yes)
-                {
-                    // do something
-                }
+                if (dialogResult == DialogResult.Yes) Process.Start("https://github.com/fl-wer/osu-Offline-Support");
             }
         }
     }
