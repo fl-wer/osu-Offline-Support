@@ -1,6 +1,8 @@
 # Offline Support
 Tool that displays scores from selected map, supports mod leaderboards, all game modes and has some extra features, should be used with 2 monitors and by offline players.
 
+![image](https://user-images.githubusercontent.com/101416707/158074805-77bbde46-5d7e-4e15-9b02-98a86944c34b.png)
+
 # Changing Pages
 Go to next page **Shift+RightArrow**.
 Go to previous page **Shift+LeftArrow**.
