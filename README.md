@@ -4,7 +4,8 @@ Tool that displays scores from selected map, supports mod leaderboards, all game
 ![image](https://user-images.githubusercontent.com/101416707/158074805-77bbde46-5d7e-4e15-9b02-98a86944c34b.png)
 
 # Options
-You can right-click anywhere on the window you will see options.
+You can right-click anywhere on the window and you will see options, eg below.
+![image](https://user-images.githubusercontent.com/101416707/158075343-002cc4ee-32d2-4665-9ce6-5ed35dc25299.png)
 
 # Changing Pages
 Go to next page **Shift+RightArrow**.  
