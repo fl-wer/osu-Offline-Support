@@ -7,7 +7,7 @@ Tool that displays scores from selected map, supports mod leaderboards, all game
 Go to next page **Shift+RightArrow**.
 Go to previous page **Shift+LeftArrow**.
 
-# Enabling Mod Leaderboard
+# Mod Leaderboard
 You can enable mod leaderboard with **Shift+DownArrow**.  
 Then simply change mod combination in **osu!**.
 
