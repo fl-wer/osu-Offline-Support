@@ -36,7 +36,7 @@ namespace Offline_Support
         public Main() { InitializeComponent(); }
 
         // build version
-        public static string softwareVersion = "2";
+        public static string softwareVersion = "3";
 
         // information file names, these are files that store all
         // kind of information and are saved in software default folder in variable below
