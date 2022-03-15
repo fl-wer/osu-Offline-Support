@@ -409,7 +409,7 @@ namespace Offline_Support
             leaderboardPage -= 1;
 
             // going through all of the scores that we have and assigning to form controls
-            for (int i = leaderboardPage * scoresPerPage; i < (scoresPerPage + leaderboardPage * scoresPerPage); i++)
+            for (int i = leaderboardPage * scoresPerPage; i < (scoresPerPage + (leaderboardPage * scoresPerPage)); i++)
             {
                 // checking if there are scores to load still in the array
                 if (i < scores.Length)
