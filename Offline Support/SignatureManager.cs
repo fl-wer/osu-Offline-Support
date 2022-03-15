@@ -17,7 +17,8 @@ namespace Offline_Support
         // foundAddressOffset helps with finding and returning pointers easier
         // start address is the address when it starts scanning from, try using it with blocks of 0x1000
         // maxAddress is the last address it will try scanning in, if it goes above below function will return 0
-        public IntPtr signatureScan(string signature, IntPtr processHandle, IntPtr foundAddressOffset, IntPtr startAddress, IntPtr maxAddress)
+        public IntPtr signatureScan(string signature, IntPtr processHandle, IntPtr foundAddressOffset, IntPtr startAddress,
+        IntPtr maxAddress, int protectionType)
         {
             // this is a first memory address of currently used block of 0x1000 addresses
             IntPtr lastAddressBlock = (IntPtr)0;
@@ -42,6 +43,9 @@ namespace Offline_Support
             // where some bytes inside might be changing per game session and we want to skip them
             // mask will look like this "xxxxxxxxxx?xxx?"
             string mask = "";
+
+            // memory basic information for region access level information
+            WinImported.MEMORY_BASIC_INFORMATION memoryInfo = new WinImported.MEMORY_BASIC_INFORMATION();
 
             // converting string byte array to just normal byte array above
             for (int i = 0; i < byteSignature.Length; i++)
@@ -69,40 +73,52 @@ namespace Offline_Support
                 // instead of reading it through array of bytes, it's just for optimization
                 byte[] blockReturn = new byte[0x1000];
 
-                // below reads 0x1000 bytes and puts them in an array variable "blockReturn"
-                if (Main.ReadProcessMemory(processHandle, lastAddressBlock, blockReturn, 0x1000, out IntPtr nullification))
+                try // we use try here because virtualquery might throw exception if something goes wrong
                 {
-                    // restarting offset to 0 with every new block of bytes
-                    blockReturnOffset = 0;
+                    // checking memory info of the block that we want to go through
+                    // if the block is with incorrect state, protection or region size it will not proceed
+                    // to basically save time and speed up the signature scanning process
+                    WinImported.VirtualQueryEx(processHandle, lastAddressBlock, out memoryInfo, 0x1000);
 
-                    foreach (byte singleByte in blockReturn)
+                    if (memoryInfo.State == 0x1000 && memoryInfo.Protect == 0x40 && memoryInfo.RegionSize != 0)
                     {
-                        // "foundBytes" is also being used as offset for signature & mask arrays
-                        // because every time it succeds we want to look for next byte in an array
-                        // and every time we find one we add 1 to "foundBytes"
-
-                        // adding offset to narrow down when returning to address and not block of 0x1000
-                        blockReturnOffset += 1;
-
-                        // we don't skip the byte and act like we found it if mask doesn't say so
-                        if (mask[foundBytes] != '?')
+                        // below reads 0x1000 bytes and puts them in an array variable "blockReturn"
+                        if (WinImported.ReadProcessMemory(processHandle, lastAddressBlock, blockReturn, 0x1000, out IntPtr nullification))
                         {
-                            // if byte matches byte in signature (then goes to next one on next iteration)
-                            if (singleByte == byteSignature[foundBytes])
-                                foundBytes += 1;
+                            // restarting offset to 0 with every new block of bytes
+                            blockReturnOffset = 0;
 
-                            // we reset to 0 because if found signature breaks it's no longer the signature we're looking for
-                            else foundBytes = 0;
+                            foreach (byte singleByte in blockReturn)
+                            {
+                                // "foundBytes" is also being used as offset for signature & mask arrays
+                                // because every time it succeds we want to look for next byte in an array
+                                // and every time we find one we add 1 to "foundBytes"
 
-                            // if number of successfully found bytes in order reaches signature length it means we found the signature
-                            // so we're returning block + block offset + found address offset and minus signature length
-                            if (foundBytes == byteSignature.Length)
-                                return (IntPtr)((long)lastAddressBlock + blockReturnOffset + (long)foundAddressOffset - byteSignature.Length);
+                                // adding offset to narrow down when returning to address and not block of 0x1000
+                                blockReturnOffset += 1;
+
+                                // we don't skip the byte and act like we found it if mask doesn't say so
+                                if (mask[foundBytes] != '?')
+                                {
+                                    // if byte matches byte in signature (then goes to next one on next iteration)
+                                    if (singleByte == byteSignature[foundBytes])
+                                        foundBytes += 1;
+
+                                    // we reset to 0 because if found signature breaks it's no longer the signature we're looking for
+                                    else foundBytes = 0;
+
+                                    // if number of successfully found bytes in order reaches signature length it means we found the signature
+                                    // so we're returning block + block offset + found address offset and minus signature length
+                                    if (foundBytes == byteSignature.Length)
+                                        return (IntPtr)((long)lastAddressBlock + blockReturnOffset + (long)foundAddressOffset - byteSignature.Length);
+                                }
+                                // if mask says to skip byte and act like we found them without even searching => we do
+                                else foundBytes += 1;
+                            }
                         }
-                        // if mask says to skip byte and act like we found them without even searching => we do
-                        else foundBytes += 1;
                     }
                 }
+                catch { }
 
                 // setting up variable for reading next block when done with current one
                 lastAddressBlock += 0x1000;
