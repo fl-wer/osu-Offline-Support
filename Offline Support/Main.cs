@@ -156,7 +156,6 @@ namespace Offline_Support
                 {
                     logMessage.Text = "MOD LEADERBOARD DISABLED";
                     logMessage.ForeColor = Color.Red;
-
                 }
 
                 // reloading leaderboard by changing last map id
