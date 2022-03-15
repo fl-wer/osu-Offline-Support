@@ -18,20 +18,6 @@ namespace Offline_Support
 {
     public partial class Main : Form
     {
-        // ### functions imported from windows dll and turned into c#
-
-        // puts found address to provided variable
-        // returns true or false whether it found the address or not
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool ReadProcessMemory(
-        IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, Int32 nSize, out IntPtr lpNumberOfBytesRead);
-
-        // puts found address to provided variable
-        // returns true or false whether it found the address or not
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool ReadProcessMemory(
-        IntPtr hProcess, IntPtr lpBaseAddress, out IntPtr lpBuffer, Int32 nSize, out IntPtr lpNumberOfBytesRead);
-
         // initialize, ignore this
         public Main() { InitializeComponent(); }
 
@@ -85,6 +71,9 @@ namespace Offline_Support
 
         // indicates if we're requesting for mod leaderboards and not normal one
         bool modLeaderboard = false;
+
+        // const type of protection used for virtual query ex function
+        const int PAGE_EXECUTE_READWRITE = 0x40;
 
         // ### hotkey triggered functions
         // ***
@@ -313,12 +302,12 @@ namespace Offline_Support
             // this is actually the real pointer grabbed from game function
             IntPtr firstRead = (IntPtr)0;
 
-            if (ReadProcessMemory(gameProcessHandle, pointer, out firstRead, 0x04, out IntPtr qn5jc5))
+            if (WinImported.ReadProcessMemory(gameProcessHandle, pointer, out firstRead, 0x04, out IntPtr qn5jc5))
             {
                 // second read is the address pointer is pointing at
                 IntPtr secondRead = (IntPtr)0;
 
-                if (ReadProcessMemory(gameProcessHandle, firstRead, out secondRead, 0x04, out IntPtr v3j3j4))
+                if (WinImported.ReadProcessMemory(gameProcessHandle, firstRead, out secondRead, 0x04, out IntPtr v3j3j4))
                 {
                     // third read is the address pointer is actual map id
                     IntPtr thirdRead = (IntPtr)0;
@@ -327,7 +316,7 @@ namespace Offline_Support
                     secondRead += offset;
 
                     // getting last value = map id
-                    if (ReadProcessMemory(gameProcessHandle, secondRead, out thirdRead, 0x04, out IntPtr ndp5k7))
+                    if (WinImported.ReadProcessMemory(gameProcessHandle, secondRead, out thirdRead, 0x04, out IntPtr ndp5k7))
                         return (int)thirdRead;
                 }
             }
@@ -346,9 +335,9 @@ namespace Offline_Support
             IntPtr enabledMods = (IntPtr)0;
 
             // reading through signature address and then through extracted address that holds mods
-            if (ReadProcessMemory(gameProcessHandle, pointer, out firstRead, 0x04, out IntPtr qn5jc5))
+            if (WinImported.ReadProcessMemory(gameProcessHandle, pointer, out firstRead, 0x04, out IntPtr qn5jc5))
             {
-                if (ReadProcessMemory(gameProcessHandle, firstRead, out enabledMods, 0x04, out IntPtr eqy7wj))
+                if (WinImported.ReadProcessMemory(gameProcessHandle, firstRead, out enabledMods, 0x04, out IntPtr eqy7wj))
                     return (int)enabledMods;
             }
 
@@ -367,9 +356,9 @@ namespace Offline_Support
             IntPtr gameMode = (IntPtr)0;
 
             // reading through signature address and then through extracted address that holds mods
-            if (ReadProcessMemory(gameProcessHandle, pointer, out firstRead, 0x04, out IntPtr qn5jc5))
+            if (WinImported.ReadProcessMemory(gameProcessHandle, pointer, out firstRead, 0x04, out IntPtr qn5jc5))
             {
-                if (ReadProcessMemory(gameProcessHandle, firstRead, out gameMode, 0x04, out IntPtr eqy7wj))
+                if (WinImported.ReadProcessMemory(gameProcessHandle, firstRead, out gameMode, 0x04, out IntPtr eqy7wj))
                 {
                     // checking if correct address was used and correct value gathered
                     // there are only game modes from 0 to 4
@@ -614,7 +603,8 @@ namespace Offline_Support
                     {
                         // scanning for signature address
                         mapIdPointer = signatureManager.signatureScan(sigTemplate.signature,
-                        gameProcess.Handle, (IntPtr)sigTemplate.offset, (IntPtr)0, (IntPtr)int.MaxValue);
+                        gameProcess.Handle, (IntPtr)sigTemplate.offset, (IntPtr)0, (IntPtr)int.MaxValue,
+                        PAGE_EXECUTE_READWRITE);
 
                         // found signature address and doesn't have too look using the other ones (backups)
                         if (mapIdPointer != (IntPtr)0) break;
@@ -630,7 +620,8 @@ namespace Offline_Support
                     {
                         // scanning for signature address
                         enabledModsPointer = signatureManager.signatureScan(sigTemplate.signature,
-                        gameProcess.Handle, (IntPtr)sigTemplate.offset, (IntPtr)0, (IntPtr)int.MaxValue);
+                        gameProcess.Handle, (IntPtr)sigTemplate.offset, (IntPtr)0, (IntPtr)int.MaxValue,
+                        PAGE_EXECUTE_READWRITE);
 
                         // found signature address and doesn't have too look using the other ones (backups)
                         if (enabledModsPointer != (IntPtr)0) break;
@@ -646,7 +637,8 @@ namespace Offline_Support
                     {
                         // scanning for signature address
                         gameModePointer = signatureManager.signatureScan(sigTemplate.signature,
-                        gameProcess.Handle, (IntPtr)sigTemplate.offset, (IntPtr)0, (IntPtr)int.MaxValue);
+                        gameProcess.Handle, (IntPtr)sigTemplate.offset, (IntPtr)0, (IntPtr)int.MaxValue,
+                        PAGE_EXECUTE_READWRITE);
 
                         // found signature address and doesn't have too look using the other ones (backups)
                         if (gameModePointer != (IntPtr)0) break;

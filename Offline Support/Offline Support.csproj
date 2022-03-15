@@ -84,6 +84,7 @@
     <Compile Include="Crypto.cs" />
     <Compile Include="HotKeyEventArgs.cs" />
     <Compile Include="HotkeyManager.cs" />
+    <Compile Include="WinImported.cs" />
     <Compile Include="osuJsonParse.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
