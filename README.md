@@ -1,7 +1,6 @@
 # Offline Support
 
 [![CodeFactor](https://www.codefactor.io/repository/github/fl-wer/osu-offline-support/badge)](https://www.codefactor.io/repository/github/fl-wer/osu-offline-support)
-
 Tool that displays scores from selected map, supports mod leaderboards, all game modes and has some extra features, should be used with 2 monitors and by offline players.
 
 ![image](https://user-images.githubusercontent.com/101416707/158081541-7b74d169-bb26-454c-b199-349a48c52831.png)
