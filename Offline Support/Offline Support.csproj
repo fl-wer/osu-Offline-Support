@@ -80,7 +80,9 @@
     <Compile Include="ApiKey.Designer.cs">
       <DependentUpon>ApiKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="BeatmapScore.cs" />
     <Compile Include="Crypto.cs" />
+    <Compile Include="HotKeyEventArgs.cs" />
     <Compile Include="HotkeyManager.cs" />
     <Compile Include="osuJsonParse.cs" />
     <Compile Include="Main.cs">
