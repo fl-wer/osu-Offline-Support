@@ -477,117 +477,6 @@ namespace Offline_Support
 
             while (true)
             {
-                // 1 = looking for game process, first time running osu or maybe it closed
-                if (backgroundWorkerStage == 1)
-                {
-                    gameProcess = null; // making it null for unexpected stage degradation support
-                    hideScores(); // we hide scores so there's indication that osu was closed
-
-                    // changing log status, text on the bottom of the form, first row
-                    logStatus.Text = "STATUS: WAITING FOR OSU!";
-                    logStatus.ForeColor = Color.Red;
-
-                    // searching through processes to see if osu! is open
-                    foreach (Process process in Process.GetProcesses())
-                    {
-                        // if found osu assign process to Process variable and go to next stage
-                        // not uing a function so we could assign process to gameProcess variable
-                        if (process.ProcessName == "osu!")
-                        {
-                            gameProcess = process;
-                            backgroundWorkerStage = 2;
-                        }
-                    }
-
-                    // break between each check for performance
-                    Thread.Sleep(300);
-                }
-
-                // 2 = find signature addresses and then pointers out of these addresses
-                if (backgroundWorkerStage == 2)
-                {
-                    // changing status log on the form accordingly
-                    logStatus.Text = "STATUS: SCANNING MEMORY, OPEN MAP LIST";
-                    logStatus.ForeColor = Color.Yellow;
-
-                    // manager object for all of the signature related functions + tools
-                    SignatureManager signatureManager = new SignatureManager();
-                    SignatureTemplate[] mapIdSignature = new SignatureTemplate[2];
-                    SignatureTemplate[] enabledModsSignature = new SignatureTemplate[1];
-                    SignatureTemplate[] gameModeSignature = new SignatureTemplate[2];
-
-                    // ### signature groups
-                    // they hold signature and offset that will be added so the address of
-                    // signature + offset will hold the actual address of a pointer
-                    mapIdSignature[0] = new SignatureTemplate("85 C0 74 05 33 D2 89 55 DC 53", 0x0C);
-                    mapIdSignature[1] = new SignatureTemplate("8B CE 89 4D CC 8B 4D 08", 0x14);
-
-                    enabledModsSignature[0] = new SignatureTemplate("DB 85 38 FF FF FF 83", 0x0E);
-
-                    gameModeSignature[0] = new SignatureTemplate("01 00 00 85 ?? ?? ?? ?? A1 ?? ?? ?? ?? C3", 0x09);
-                    gameModeSignature[1] = new SignatureTemplate("55 8B EC 56 8B F1 39 15", 0x08);
-
-                    // refreshing pointers for stage unexpected degradation support
-                    mapIdPointer = (IntPtr)0;
-                    enabledModsPointer = (IntPtr)0;
-                    gameModePointer = (IntPtr)0;
-
-                    // going throgh each index of an array, we have 2 for backups
-                    // if one of them goes down after an update
-                    // below is for map id
-                    foreach (SignatureTemplate sigTemplate in mapIdSignature)
-                    {
-                        // scanning for signature address
-                        mapIdPointer = signatureManager.signatureScan(sigTemplate.signature,
-                        gameProcess.Handle, (IntPtr)sigTemplate.offset, (IntPtr)0, (IntPtr)int.MaxValue);
-
-                        // found signature address and doesn't have too look using the other ones (backups)
-                        if (mapIdPointer != (IntPtr)0) break;
-
-                        // checking if osu is still running and going to stage 1 if not
-                        if (!isProcessOpen("osu!")) backgroundWorkerStage = 1;
-                    }
-
-                    // going throgh each index of an array, we have 1
-                    // if one of them goes down after an update
-                    // below is for enabled mods
-                    foreach (SignatureTemplate sigTemplate in enabledModsSignature)
-                    {
-                        // scanning for signature address
-                        enabledModsPointer = signatureManager.signatureScan(sigTemplate.signature,
-                        gameProcess.Handle, (IntPtr)sigTemplate.offset, (IntPtr)0, (IntPtr)int.MaxValue);
-
-                        // found signature address and doesn't have too look using the other ones (backups)
-                        if (enabledModsPointer != (IntPtr)0) break;
-
-                        // checking if osu is still running and going to stage 1 if not
-                        if (!isProcessOpen("osu!")) backgroundWorkerStage = 1;
-                    }
-
-                    // going throgh each index of an array, we have 1
-                    // if one of them goes down after an update
-                    // below is for game mode
-                    foreach (SignatureTemplate sigTemplate in gameModeSignature)
-                    {
-                        // scanning for signature address
-                        gameModePointer = signatureManager.signatureScan(sigTemplate.signature,
-                        gameProcess.Handle, (IntPtr)sigTemplate.offset, (IntPtr)0, (IntPtr)int.MaxValue);
-
-                        // found signature address and doesn't have too look using the other ones (backups)
-                        if (gameModePointer != (IntPtr)0) break;
-
-                        // checking if osu is still running and going to stage 1 if not
-                        if (!isProcessOpen("osu!")) backgroundWorkerStage = 1;
-                    }
-
-                    // checking if osu is still running and going to stage 1 if not
-                    if (!isProcessOpen("osu!")) backgroundWorkerStage = 1;
-
-                    // found signature addresses and moving to next stage
-                    if (mapIdPointer != (IntPtr)0 && enabledModsPointer != (IntPtr)0)
-                        backgroundWorkerStage = 3;
-                }
-
                 // 3 = read game data using pointers and if map changed read map's data and display
                 if (backgroundWorkerStage == 3)
                 {
@@ -686,6 +575,117 @@ namespace Offline_Support
 
                     // quick sleep between every loop just for optimization
                     Thread.Sleep(100);
+                }
+
+                // 2 = find signature addresses and then pointers out of these addresses
+                else if (backgroundWorkerStage == 2)
+                {
+                    // changing status log on the form accordingly
+                    logStatus.Text = "STATUS: SCANNING MEMORY, OPEN MAP LIST";
+                    logStatus.ForeColor = Color.Yellow;
+
+                    // manager object for all of the signature related functions + tools
+                    SignatureManager signatureManager = new SignatureManager();
+                    SignatureTemplate[] mapIdSignature = new SignatureTemplate[2];
+                    SignatureTemplate[] enabledModsSignature = new SignatureTemplate[1];
+                    SignatureTemplate[] gameModeSignature = new SignatureTemplate[2];
+
+                    // ### signature groups
+                    // they hold signature and offset that will be added so the address of
+                    // signature + offset will hold the actual address of a pointer
+                    mapIdSignature[0] = new SignatureTemplate("85 C0 74 05 33 D2 89 55 DC 53", 0x0C);
+                    mapIdSignature[1] = new SignatureTemplate("8B CE 89 4D CC 8B 4D 08", 0x14);
+
+                    enabledModsSignature[0] = new SignatureTemplate("DB 85 38 FF FF FF 83", 0x0E);
+
+                    gameModeSignature[0] = new SignatureTemplate("01 00 00 85 ?? ?? ?? ?? A1 ?? ?? ?? ?? C3", 0x09);
+                    gameModeSignature[1] = new SignatureTemplate("55 8B EC 56 8B F1 39 15", 0x08);
+
+                    // refreshing pointers for stage unexpected degradation support
+                    mapIdPointer = (IntPtr)0;
+                    enabledModsPointer = (IntPtr)0;
+                    gameModePointer = (IntPtr)0;
+
+                    // going throgh each index of an array, we have 2 for backups
+                    // if one of them goes down after an update
+                    // below is for map id
+                    foreach (SignatureTemplate sigTemplate in mapIdSignature)
+                    {
+                        // scanning for signature address
+                        mapIdPointer = signatureManager.signatureScan(sigTemplate.signature,
+                        gameProcess.Handle, (IntPtr)sigTemplate.offset, (IntPtr)0, (IntPtr)int.MaxValue);
+
+                        // found signature address and doesn't have too look using the other ones (backups)
+                        if (mapIdPointer != (IntPtr)0) break;
+
+                        // checking if osu is still running and going to stage 1 if not
+                        if (!isProcessOpen("osu!")) backgroundWorkerStage = 1;
+                    }
+
+                    // going throgh each index of an array, we have 1
+                    // if one of them goes down after an update
+                    // below is for enabled mods
+                    foreach (SignatureTemplate sigTemplate in enabledModsSignature)
+                    {
+                        // scanning for signature address
+                        enabledModsPointer = signatureManager.signatureScan(sigTemplate.signature,
+                        gameProcess.Handle, (IntPtr)sigTemplate.offset, (IntPtr)0, (IntPtr)int.MaxValue);
+
+                        // found signature address and doesn't have too look using the other ones (backups)
+                        if (enabledModsPointer != (IntPtr)0) break;
+
+                        // checking if osu is still running and going to stage 1 if not
+                        if (!isProcessOpen("osu!")) backgroundWorkerStage = 1;
+                    }
+
+                    // going throgh each index of an array, we have 1
+                    // if one of them goes down after an update
+                    // below is for game mode
+                    foreach (SignatureTemplate sigTemplate in gameModeSignature)
+                    {
+                        // scanning for signature address
+                        gameModePointer = signatureManager.signatureScan(sigTemplate.signature,
+                        gameProcess.Handle, (IntPtr)sigTemplate.offset, (IntPtr)0, (IntPtr)int.MaxValue);
+
+                        // found signature address and doesn't have too look using the other ones (backups)
+                        if (gameModePointer != (IntPtr)0) break;
+
+                        // checking if osu is still running and going to stage 1 if not
+                        if (!isProcessOpen("osu!")) backgroundWorkerStage = 1;
+                    }
+
+                    // checking if osu is still running and going to stage 1 if not
+                    if (!isProcessOpen("osu!")) backgroundWorkerStage = 1;
+
+                    // found signature addresses and moving to next stage
+                    if (mapIdPointer != (IntPtr)0 && enabledModsPointer != (IntPtr)0)
+                        backgroundWorkerStage = 3;
+                }
+
+                // 1 = looking for game process, first time running osu or maybe it closed
+                else if (backgroundWorkerStage == 1)
+                {
+                    gameProcess = null; // making it null for unexpected stage degradation support
+                    hideScores(); // we hide scores so there's indication that osu was closed
+
+                    // changing log status, text on the bottom of the form, first row
+                    logStatus.Text = "STATUS: WAITING FOR OSU!";
+                    logStatus.ForeColor = Color.Red;
+
+                    // searching through processes to see if osu! is open
+                    foreach (Process process in Process.GetProcesses())
+                    {
+                        // if found osu assign process to Process variable and go to next stage
+                        // not uing a function so we could assign process to gameProcess variable
+                        if (process.ProcessName == "osu!")
+                        {
+                            gameProcess = process;
+                            backgroundWorkerStage = 2;
+                        }
+                    }
+
+                    // break between each check for performance
+                    Thread.Sleep(300);
                 }
             }
         }
