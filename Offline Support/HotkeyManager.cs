@@ -84,7 +84,6 @@ namespace Offline_Support
         private static int _id = 0;
     }
 
-
     public class HotKeyEventArgs : EventArgs
     {
         public readonly Keys Key;
