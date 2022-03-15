@@ -35,8 +35,9 @@ namespace Offline_Support
         // initialize, ignore this
         public Main() { InitializeComponent(); }
 
-        // build version
-        public static string softwareVersion = "4";
+        // build version, adding new line because github adds it to their file
+        // and the version is being compared with one written in github file in repo
+        public static string softwareVersion = "4\n";
 
         // information file names, these are files that store all
         // kind of information and are saved in software default folder in variable below

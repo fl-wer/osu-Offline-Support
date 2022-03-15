@@ -34,11 +34,8 @@ namespace Offline_Support
         // this launches when version number is finally read from the server
         static void versionReadComplete(object sender, DownloadStringCompletedEventArgs e)
         {
-            // github adds new line to file so have to edit it a little bit
-            string convertedOutput = e.Result.Remove(e.Result.Length - 1);
-
             // if current version is not the latest version
-            if (convertedOutput != Main.softwareVersion)
+            if (e.Result != Main.softwareVersion)
             {
                 // message box pops up and asks if it should open downlod page
                 DialogResult dialogResult = MessageBox.Show("New version available, open download link?", "Update", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
