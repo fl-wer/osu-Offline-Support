@@ -8,15 +8,15 @@ Tool that displays scores from selected map, supports mod leaderboards, all game
 # Options
 You can right-click anywhere on the window and you will see options, eg below.  
 
-![image](https://user-images.githubusercontent.com/101416707/158075343-002cc4ee-32d2-4665-9ce6-5ed35dc25299.png)  
+![image](https://user-images.githubusercontent.com/101416707/158075343-002cc4ee-32d2-4665-9ce6-5ed35dc25299.png)
 
 # Changing Pages
 Go to next page **Shift+RightArrow**.  
-Go to previous page **Shift+LeftArrow**.  
+Go to previous page **Shift+LeftArrow**.
 
 # Mod Leaderboard
 You can enable mod leaderboard with **Shift+DownArrow**.  
-Then simply change mod combination in **osu!**.  
+Then simply change mod combination in **osu!**.
 
 # Api Key Security
 Offline Support stores encrypted version of your osu! **api key**.  
