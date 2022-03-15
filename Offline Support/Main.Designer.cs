@@ -103,6 +103,7 @@ namespace Offline_Support
             this.scoresCurtain = new System.Windows.Forms.Label();
             this.currentPage = new System.Windows.Forms.Label();
             this.loadingText = new System.Windows.Forms.Label();
+            this.ignoreUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quickSupportContextMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rank0)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.profilePic0)).BeginInit();
@@ -126,21 +127,22 @@ namespace Offline_Support
             // 
             this.quickSupportContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.alwaysOnTopToolStripMenuItem,
+            this.ignoreUpdatesToolStripMenuItem,
             this.resetAPIKeyToolStripMenuItem});
             this.quickSupportContextMenuStrip.Name = "quickSupportCMS";
-            this.quickSupportContextMenuStrip.Size = new System.Drawing.Size(153, 48);
+            this.quickSupportContextMenuStrip.Size = new System.Drawing.Size(181, 92);
             // 
             // alwaysOnTopToolStripMenuItem
             // 
             this.alwaysOnTopToolStripMenuItem.Name = "alwaysOnTopToolStripMenuItem";
-            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.alwaysOnTopToolStripMenuItem.Text = "Always On Top";
             this.alwaysOnTopToolStripMenuItem.Click += new System.EventHandler(this.alwaysOnTopToolStripMenuItem_Click);
             // 
             // resetAPIKeyToolStripMenuItem
             // 
             this.resetAPIKeyToolStripMenuItem.Name = "resetAPIKeyToolStripMenuItem";
-            this.resetAPIKeyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.resetAPIKeyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.resetAPIKeyToolStripMenuItem.Text = "Reset API Key";
             this.resetAPIKeyToolStripMenuItem.Click += new System.EventHandler(this.resetAPIKeyToolStripMenuItem_Click);
             // 
@@ -932,6 +934,13 @@ namespace Offline_Support
             this.loadingText.Text = "Loading...";
             this.loadingText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // ignoreUpdatesToolStripMenuItem
+            // 
+            this.ignoreUpdatesToolStripMenuItem.Name = "ignoreUpdatesToolStripMenuItem";
+            this.ignoreUpdatesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ignoreUpdatesToolStripMenuItem.Text = "Ignore Updates";
+            this.ignoreUpdatesToolStripMenuItem.Click += new System.EventHandler(this.ignoreUpdatesToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1111,6 +1120,8 @@ namespace Offline_Support
         private System.Windows.Forms.Label scoresCurtain;
         private System.Windows.Forms.Label currentPage;
         private System.Windows.Forms.Label loadingText;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem ignoreUpdatesToolStripMenuItem;
     }
 }
 

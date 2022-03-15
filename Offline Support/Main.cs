@@ -36,13 +36,14 @@ namespace Offline_Support
         public Main() { InitializeComponent(); }
 
         // build version
-        public static string softwareVersion = "3";
+        public static string softwareVersion = "4";
 
         // information file names, these are files that store all
         // kind of information and are saved in software default folder in variable below
         // all those files will have "INF" at the end so you know these
-        public static string apiKeyINF = "93q2qp"; //
-        public static string alwaysOnTopINF = "p44gz4"; //
+        public static string apiKeyINF = "93q2qp";
+        public static string alwaysOnTopINF = "p44gz4";
+        public static string ignoreUpdatesINF = "ev26p4";
 
         // folder that holds all information files, it's in %TEMP%
         string softwareFolder = "19db20f2-b775-420b-9668-02b08bd50fbc";
@@ -174,11 +175,6 @@ namespace Offline_Support
             // hide scores with curtain, don't show until they load
             hideScores();
 
-            // check if there's new version of software available before doing anything
-            // if there is a new version it will open new message box with two options - yes, no
-            // if you click yes it will open github link with downloads for releases
-            Updater.checkForUpdates();
-
             // registering key binds for some functions
             HotKeyManager.RegisterHotKey(Keys.Left, KeyModifiers.Shift);
             HotKeyManager.HotKeyPressed += new EventHandler<HotKeyEventArgs>(hotKeyPreviousPage);
@@ -205,6 +201,24 @@ namespace Offline_Support
                 ((ToolStripMenuItem)quickSupportContextMenuStrip.Items[0]).Checked = !((ToolStripMenuItem)quickSupportContextMenuStrip.Items[0]).Checked;
             }
             // else it will just stay on default which would just be False anyway
+
+            // loading ignore updates INF file and changing context menu strip accordingly
+            string tempUpdatesINFPath = Path.GetTempPath() + softwareFolder + "\\" + ignoreUpdatesINF;
+            if (File.Exists(tempUpdatesINFPath))
+            {
+                // ignore updates enabled and saved in options therefore checkbox will be ticked
+                if (File.ReadAllText(tempUpdatesINFPath) == "True") ((ToolStripMenuItem)quickSupportContextMenuStrip.Items[1]).Checked = true;
+                else ((ToolStripMenuItem)quickSupportContextMenuStrip.Items[1]).Checked = false;
+            }
+            else ((ToolStripMenuItem)quickSupportContextMenuStrip.Items[1]).Checked = false;
+
+            // check if there's new version of software available before doing anything
+            // if there is a new version it will open new message box with two options - yes, no
+            // if you click yes it will open github link with downloads for releases
+            // checking status of "ignore updates" option (from context strip menu)
+            // previously updated by file reading above
+            if (!((ToolStripMenuItem)quickSupportContextMenuStrip.Items[1]).Checked)
+                Updater.checkForUpdates();
 
             // check if api key saved and load it if so
             if (File.Exists(Path.GetTempPath() + softwareFolder + "\\" + apiKeyINF))
@@ -256,6 +270,17 @@ namespace Offline_Support
             // restart app to re-read apiKey file and obviously it won't find it on next start and ask user for it again
             Process.Start(AppDomain.CurrentDomain.FriendlyName);
             Application.Exit();
+        }
+
+        // button on menu strip that changesif software should look for update or just ignore it
+        private void ignoreUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // change checkbox for menu strip option
+            ((ToolStripMenuItem)quickSupportContextMenuStrip.Items[1]).Checked = !((ToolStripMenuItem)quickSupportContextMenuStrip.Items[1]).Checked;
+
+            // save checkbox status for reread on next run
+            File.WriteAllText(Path.GetTempPath() + softwareFolder + "\\" + ignoreUpdatesINF,
+            ((ToolStripMenuItem)quickSupportContextMenuStrip.Items[1]).Checked.ToString());
         }
 
         // show custom message box with warning or error icon
