@@ -32,6 +32,7 @@ namespace Offline_Support
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.quickSupportContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ignoreUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetAPIKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.background0 = new System.Windows.Forms.Label();
             this.background1 = new System.Windows.Forms.Label();
@@ -103,7 +104,6 @@ namespace Offline_Support
             this.scoresCurtain = new System.Windows.Forms.Label();
             this.currentPage = new System.Windows.Forms.Label();
             this.loadingText = new System.Windows.Forms.Label();
-            this.ignoreUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quickSupportContextMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rank0)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.profilePic0)).BeginInit();
@@ -130,19 +130,26 @@ namespace Offline_Support
             this.ignoreUpdatesToolStripMenuItem,
             this.resetAPIKeyToolStripMenuItem});
             this.quickSupportContextMenuStrip.Name = "quickSupportCMS";
-            this.quickSupportContextMenuStrip.Size = new System.Drawing.Size(181, 92);
+            this.quickSupportContextMenuStrip.Size = new System.Drawing.Size(155, 70);
             // 
             // alwaysOnTopToolStripMenuItem
             // 
             this.alwaysOnTopToolStripMenuItem.Name = "alwaysOnTopToolStripMenuItem";
-            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.alwaysOnTopToolStripMenuItem.Text = "Always On Top";
             this.alwaysOnTopToolStripMenuItem.Click += new System.EventHandler(this.alwaysOnTopToolStripMenuItem_Click);
+            // 
+            // ignoreUpdatesToolStripMenuItem
+            // 
+            this.ignoreUpdatesToolStripMenuItem.Name = "ignoreUpdatesToolStripMenuItem";
+            this.ignoreUpdatesToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.ignoreUpdatesToolStripMenuItem.Text = "Ignore Updates";
+            this.ignoreUpdatesToolStripMenuItem.Click += new System.EventHandler(this.ignoreUpdatesToolStripMenuItem_Click);
             // 
             // resetAPIKeyToolStripMenuItem
             // 
             this.resetAPIKeyToolStripMenuItem.Name = "resetAPIKeyToolStripMenuItem";
-            this.resetAPIKeyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resetAPIKeyToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.resetAPIKeyToolStripMenuItem.Text = "Reset API Key";
             this.resetAPIKeyToolStripMenuItem.Click += new System.EventHandler(this.resetAPIKeyToolStripMenuItem_Click);
             // 
@@ -919,7 +926,6 @@ namespace Offline_Support
             this.currentPage.Name = "currentPage";
             this.currentPage.Size = new System.Drawing.Size(85, 20);
             this.currentPage.TabIndex = 74;
-            this.currentPage.Text = "PAGE 1/8";
             this.currentPage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // loadingText
@@ -933,13 +939,6 @@ namespace Offline_Support
             this.loadingText.TabIndex = 75;
             this.loadingText.Text = "Loading...";
             this.loadingText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // ignoreUpdatesToolStripMenuItem
-            // 
-            this.ignoreUpdatesToolStripMenuItem.Name = "ignoreUpdatesToolStripMenuItem";
-            this.ignoreUpdatesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.ignoreUpdatesToolStripMenuItem.Text = "Ignore Updates";
-            this.ignoreUpdatesToolStripMenuItem.Click += new System.EventHandler(this.ignoreUpdatesToolStripMenuItem_Click);
             // 
             // Main
             // 

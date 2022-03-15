@@ -164,6 +164,9 @@ namespace Offline_Support
             // hide scores with curtain, don't show until they load
             hideScores();
 
+            // set page text, requires some calculation to (PAGE 1/x)
+            setPageText();
+
             // registering key binds for some functions
             HotKeyManager.RegisterHotKey(Keys.Left, KeyModifiers.Shift);
             HotKeyManager.HotKeyPressed += new EventHandler<HotKeyEventArgs>(hotKeyPreviousPage);
@@ -442,6 +445,17 @@ namespace Offline_Support
             }
         }
 
+        // there's some calculation that needs to be done for maximum page
+        // we're setting text that is displayed on the bottom right of form PAGE 1/x
+        private void setPageText()
+        {
+            // maximum page based on scores per page and 50 default output scores from osu
+            int highestPage = (int)Math.Ceiling((double)50 / scoresPerPage);
+
+            // changing form control to display current page
+            currentPage.Text = "PAGE " + globalLeaderboardPage + "/" + highestPage;
+        }
+
         // this bacgkround worker has multiple stages, explained more in "backgroundWorkerStage"
         // variable initialization above on the top of this page in comments
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -493,10 +507,6 @@ namespace Offline_Support
                         // it means that if we go to last page on leaderboard and switch map
                         // it will load first page again
                         globalLeaderboardPage = 1;
-
-                        // also changing selected page on the form (visually) for page 1/x
-                        // adding PAGE 1 and removiong first 6 characters that hold PAGE x
-                        currentPage.Text = "PAGE 1" + currentPage.Text.Remove(0, 6);
 
                         // web client used for sending requests, in our case api requests to osu api
                         WebClient webClient = new WebClient();
@@ -652,7 +662,10 @@ namespace Offline_Support
 
                     // found signature addresses and moving to next stage
                     if (mapIdPointer != (IntPtr)0 && enabledModsPointer != (IntPtr)0)
+                    {
+                        setPageText();
                         backgroundWorkerStage = 3;
+                    }
                 }
 
                 // 1 = looking for game process, first time running osu or maybe it closed
