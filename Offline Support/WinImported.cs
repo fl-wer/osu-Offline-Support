@@ -14,13 +14,13 @@ namespace Offline_Support
         // returns true or false whether it found the address or not
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool ReadProcessMemory(
-        IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, Int32 nSize, out IntPtr lpNumberOfBytesRead);
+        IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, int nSize, out IntPtr lpNumberOfBytesRead);
 
         // puts found address to provided variable
         // returns true or false whether it found the address or not
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool ReadProcessMemory(
-        IntPtr hProcess, IntPtr lpBaseAddress, out IntPtr lpBuffer, Int32 nSize, out IntPtr lpNumberOfBytesRead);
+        IntPtr hProcess, IntPtr lpBaseAddress, out IntPtr lpBuffer, int nSize, out IntPtr lpNumberOfBytesRead);
 
         // checking information about memory, used for faster signature scan
         [DllImport("kernel32.dll", SetLastError = true)]
