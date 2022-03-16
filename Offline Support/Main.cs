@@ -75,12 +75,16 @@ namespace Offline_Support
         // const type of protection used for virtual query ex function
         const int PAGE_EXECUTE_READWRITE = 0x40;
 
+        // page change is allowed after loading scores first time
+        // if you try to assign scores to form when scores are null well...
+        bool pageChangeAllowed = false;
+
         // ### hotkey triggered functions
         // ***
         void hotKeyPreviousPage(object sender, HotKeyEventArgs e)
         {
             // if key is right arrow (event trigger checks for shift)
-            if (e.Key == Keys.Left)
+            if (e.Key == Keys.Left && pageChangeAllowed)
             {
                 // maximum page based on scores per page and 50 default output scores from osu
                 int highestPage = (int)Math.Ceiling((double)50 / scoresPerPage);
@@ -107,12 +111,12 @@ namespace Offline_Support
         // goes to next page and reloads forms with shift + right arrow
         void hotKeyNextPage(object sender, HotKeyEventArgs e)
         {
-            // maximum page based on scores per page and 50 default output scores from osu
-            int highestPage = (int)Math.Ceiling((double)50 / scoresPerPage);
-
             // if key is right arrow (event trigger checks for shift)
-            if (e.Key == Keys.Right)
+            if (e.Key == Keys.Right && pageChangeAllowed)
             {
+                // maximum page based on scores per page and 50 default output scores from osu
+                int highestPage = (int)Math.Ceiling((double)50 / scoresPerPage);
+
                 // making sure we're not going too high in pages
                 if (globalLeaderboardPage < highestPage)
                 {
@@ -508,6 +512,9 @@ namespace Offline_Support
                         // it will load first page again
                         globalLeaderboardPage = 1;
 
+                        // resetting page view as well on the form
+                        setPageText();
+
                         // web client used for sending requests, in our case api requests to osu api
                         WebClient webClient = new WebClient();
 
@@ -560,6 +567,11 @@ namespace Offline_Support
 
                             // converting received json to easily readible array
                             parsedScores = osuJsonManager.parseBeatmapScores(mapScoresRaw);
+
+                            // page change is allowed after loading scores first time
+                            // this is because only then scores array is referenced
+                            // and can be used to assign information to form controls
+                            pageChangeAllowed = true;
 
                             // going through all of the scores that we have and assigning to form controls
                             assignScoresToForm(parsedScores, globalLeaderboardPage);
