@@ -588,7 +588,7 @@ namespace Offline_Support
                     SignatureManager signatureManager = new SignatureManager();
                     SignatureTemplate[] mapIdSignature = new SignatureTemplate[2];
                     SignatureTemplate[] enabledModsSignature = new SignatureTemplate[1];
-                    SignatureTemplate[] gameModeSignature = new SignatureTemplate[2];
+                    SignatureTemplate[] gameModeSignature = new SignatureTemplate[1];
 
                     // ### signature groups
                     // they hold signature and offset that will be added so the address of
@@ -599,7 +599,6 @@ namespace Offline_Support
                     enabledModsSignature[0] = new SignatureTemplate("DB 85 38 FF FF FF 83", 0x0E);
 
                     gameModeSignature[0] = new SignatureTemplate("01 00 00 85 ?? ?? ?? ?? A1 ?? ?? ?? ?? C3", 0x09);
-                    gameModeSignature[1] = new SignatureTemplate("55 8B EC 56 8B F1 39 15", 0x08);
 
                     // refreshing pointers for stage unexpected degradation support
                     mapIdPointer = (IntPtr)0;
