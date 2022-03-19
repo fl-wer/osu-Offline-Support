@@ -557,7 +557,10 @@ namespace Offline_Support
 
                         // checking if we got request back with at least one score
                         // every row has "score_id" so it's good for checking
-                        if (mapScoresRaw.Contains("score_id"))
+                        bool hasScores = mapScoresRaw.Contains("score_id");
+
+                        // if map has scores
+                        if (hasScores)
                         {
                             // creaint manager for osuJsonParse class for functions + tools
                             osuJsonParse osuJsonManager = new osuJsonParse();
@@ -572,18 +575,18 @@ namespace Offline_Support
 
                             // going through all of the scores that we have and assigning to form controls
                             assignScoresToForm(parsedScores, globalLeaderboardPage);
+                        }
 
-                            // we are checking here if user changed map before request from osu came back
-                            // this way we won't be flashing loading screen on and off with every request
-                            // but rather wait for the last one and then turn off loading screen and show scores
-                            if (readMapIdMemory(mapIdPointer, 0xC8, gameProcess.Handle) == currentMapId)
-                            {
-                                // remove loading button because it's not doing anything anymore, all info received
-                                loadingText.Location = new Point(30000, 0);
+                        // we are checking here if user changed map before request from osu came back
+                        // this way we won't be flashing loading screen on and off with every request
+                        // but rather wait for the last one and then turn off loading screen and show scores
+                        if (readMapIdMemory(mapIdPointer, 0xC8, gameProcess.Handle) == currentMapId)
+                        {
+                            // remove loading button because it's not doing anything anymore, all info received
+                            loadingText.Location = new Point(30000, 0);
 
-                                // showing scores after putting all info in form
-                                showScores();
-                            }
+                            // showing scores after putting all info in form if map have rankings
+                            if (hasScores) showScores();
                         }
 
                         // changing status log on the form accordingly
