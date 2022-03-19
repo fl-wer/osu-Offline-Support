@@ -550,9 +550,6 @@ namespace Offline_Support
                         }
                         catch { }
 
-                        // remove loading button because it's not doing anything anymore, all info received
-                        loadingText.Location = new Point(30000, 0);
-
                         // saving map as last map, and enabled mods as last mods so it won't try reading this again
                         lastMapId = currentMapId;
                         lastMods = currentEnabledMods;
@@ -576,8 +573,17 @@ namespace Offline_Support
                             // going through all of the scores that we have and assigning to form controls
                             assignScoresToForm(parsedScores, globalLeaderboardPage);
 
-                            // showing scores after putting all info in form
-                            showScores();
+                            // we are checking here if user changed map before request from osu came back
+                            // this way we won't be flashing loading screen on and off with every request
+                            // but rather wait for the last one and then turn off loading screen and show scores
+                            if (readMapIdMemory(mapIdPointer, 0xC8, gameProcess.Handle) == currentMapId)
+                            {
+                                // remove loading button because it's not doing anything anymore, all info received
+                                loadingText.Location = new Point(30000, 0);
+
+                                // showing scores after putting all info in form
+                                showScores();
+                            }
                         }
 
                         // changing status log on the form accordingly
