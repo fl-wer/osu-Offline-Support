@@ -20,14 +20,17 @@ namespace Offline_Support
         // folder that holds all information files, it's in %TEMP%
         string softwareFolder = "19db20f2-b775-420b-9668-02b08bd50fbc";
 
+        // pc documents path, used for all INF files
+        string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
         private void ApiKey_Load(object sender, EventArgs e)
         {
             // disable cross thread actions flag
             CheckForIllegalCrossThreadCalls = false;
 
             // if software folder doesn't exist = make it
-            if (!Directory.Exists(Path.GetTempPath() + softwareFolder))
-                Directory.CreateDirectory(Path.GetTempPath() + softwareFolder);
+            if (!Directory.Exists(documentsPath + softwareFolder))
+                Directory.CreateDirectory(documentsPath + softwareFolder);
         }
 
         // open osu website with api key if user clicks on "osu! api key" label
@@ -43,7 +46,7 @@ namespace Offline_Support
                 string toWrite = Crypto.Encrypt(keyTextBox.Text, "7b03b040f85b47419e2ba3ad2630897f"); // encryption with key
 
                 // write encrypted key to the file
-                File.WriteAllText(Path.GetTempPath() + softwareFolder + "\\" + Main.apiKeyINF, toWrite);
+                File.WriteAllText(documentsPath + softwareFolder + "\\" + Main.apiKeyINF, toWrite);
 
                 // restart app to re-read apiKey file and obviously it won't find it on next start and ask user for it again
                 Process.Start(AppDomain.CurrentDomain.FriendlyName);

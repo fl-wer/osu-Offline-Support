@@ -79,6 +79,9 @@ namespace Offline_Support
         // if you try to assign scores to form when scores are null well...
         bool pageChangeAllowed = false;
 
+        // pc documents path, used for all INF files
+        string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
         // ### hotkey triggered functions
         // ***
         void hotKeyPreviousPage(object sender, HotKeyEventArgs e)
@@ -165,6 +168,10 @@ namespace Offline_Support
             // disable cross thread actions flag
             CheckForIllegalCrossThreadCalls = false;
 
+            // show version in the window title on the top
+            // by using global variable that's used for update cheks
+            Text = "Offline Support | v" + softwareVersion;
+
             // hide scores with curtain, don't show until they load
             hideScores();
 
@@ -182,13 +189,13 @@ namespace Offline_Support
             HotKeyManager.HotKeyPressed += new EventHandler<HotKeyEventArgs>(hotKeyEnableModLeaderboard);
 
             // if software folder doesn't exist = make it
-            if (!Directory.Exists(Path.GetTempPath() + softwareFolder))
-                Directory.CreateDirectory(Path.GetTempPath() + softwareFolder);
+            if (!Directory.Exists(documentsPath + softwareFolder))
+                Directory.CreateDirectory(documentsPath + softwareFolder);
 
             // ### load information files + settings
             // load always on top saved option
-            if (File.Exists(Path.GetTempPath() + softwareFolder + "\\" + alwaysOnTopINF) &&
-            File.ReadAllText(Path.GetTempPath() + softwareFolder + "\\" + alwaysOnTopINF) == "True")
+            if (File.Exists(documentsPath + softwareFolder + "\\" + alwaysOnTopINF) &&
+            File.ReadAllText(documentsPath + softwareFolder + "\\" + alwaysOnTopINF) == "True")
             {
                 // disable always on top for the software
                 TopMost = !TopMost;
@@ -199,7 +206,7 @@ namespace Offline_Support
             // else it will just stay on default which would just be False anyway
 
             // loading ignore updates INF file and changing context menu strip accordingly
-            string tempUpdatesINFPath = Path.GetTempPath() + softwareFolder + "\\" + ignoreUpdatesINF;
+            string tempUpdatesINFPath = documentsPath + softwareFolder + "\\" + ignoreUpdatesINF;
             if (File.Exists(tempUpdatesINFPath))
             {
                 // ignore updates enabled and saved in options therefore checkbox will be ticked
@@ -217,10 +224,10 @@ namespace Offline_Support
                 Updater.checkForUpdates();
 
             // check if api key saved and load it if so
-            if (File.Exists(Path.GetTempPath() + softwareFolder + "\\" + apiKeyINF))
+            if (File.Exists(documentsPath + softwareFolder + "\\" + apiKeyINF))
             {
                 // temporarily holds encrypted key
-                string tempApiKey = File.ReadAllText(Path.Combine(Path.GetTempPath() + softwareFolder + "\\" + apiKeyINF));
+                string tempApiKey = File.ReadAllText(Path.Combine(documentsPath + softwareFolder + "\\" + apiKeyINF));
 
                 // simple checks to make sure there was something inside that api key file
                 if (tempApiKey != "" && tempApiKey != null)
@@ -252,16 +259,16 @@ namespace Offline_Support
             ((ToolStripMenuItem)quickSupportContextMenuStrip.Items[0]).Checked = !((ToolStripMenuItem)quickSupportContextMenuStrip.Items[0]).Checked;
 
             // save always on top option to information file so user won't have to change this every time they open program
-            if (TopMost) File.WriteAllText(Path.GetTempPath() + softwareFolder + "\\" + alwaysOnTopINF, "True");
-            else File.WriteAllText(Path.GetTempPath() + softwareFolder + "\\" + alwaysOnTopINF, "False");
+            if (TopMost) File.WriteAllText(documentsPath + softwareFolder + "\\" + alwaysOnTopINF, "True");
+            else File.WriteAllText(documentsPath + softwareFolder + "\\" + alwaysOnTopINF, "False");
         }
 
         // button on menu strip that removes key file and restarts app allowing user to type in new key
         private void resetAPIKeyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // check if api key saved and if so delete the file for key refresh
-            if (File.Exists(Path.GetTempPath() + softwareFolder + "\\" + apiKeyINF))
-                File.Delete(Path.GetTempPath() + softwareFolder + "\\" + apiKeyINF);
+            if (File.Exists(documentsPath + softwareFolder + "\\" + apiKeyINF))
+                File.Delete(documentsPath + softwareFolder + "\\" + apiKeyINF);
 
             // restart app to re-read apiKey file and obviously it won't find it on next start and ask user for it again
             Process.Start(AppDomain.CurrentDomain.FriendlyName);
@@ -275,7 +282,7 @@ namespace Offline_Support
             ((ToolStripMenuItem)quickSupportContextMenuStrip.Items[1]).Checked = !((ToolStripMenuItem)quickSupportContextMenuStrip.Items[1]).Checked;
 
             // save checkbox status for reread on next run
-            File.WriteAllText(Path.GetTempPath() + softwareFolder + "\\" + ignoreUpdatesINF,
+            File.WriteAllText(documentsPath + softwareFolder + "\\" + ignoreUpdatesINF,
             ((ToolStripMenuItem)quickSupportContextMenuStrip.Items[1]).Checked.ToString());
         }
 
