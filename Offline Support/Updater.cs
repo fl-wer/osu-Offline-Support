@@ -34,15 +34,20 @@ namespace Offline_Support
         // this launches when version number is finally read from the server
         static void versionReadComplete(object sender, DownloadStringCompletedEventArgs e)
         {
-            // if current version is not the latest version
-            if (e.Result != Main.softwareVersion)
+            // using "try" in case connection drops and exception gets thrown
+            try
             {
-                // message box pops up and asks if it should open downlod page
-                DialogResult dialogResult = MessageBox.Show("New version available, open download link?", "Update", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                // if current version is not the latest version
+                if (e.Result != Main.softwareVersion)
+                {
+                    // message box pops up and asks if it should open downlod page
+                    DialogResult dialogResult = MessageBox.Show("New version available, open download link?", "Update", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
-                // it will open github page with relese download link for new version
-                if (dialogResult == DialogResult.Yes) Process.Start("https://github.com/fl-wer/osu-Offline-Support");
+                    // it will open github page with relese download link for new version
+                    if (dialogResult == DialogResult.Yes) Process.Start("https://github.com/fl-wer/osu-Offline-Support");
+                }
             }
+            catch { }
         }
     }
 }
