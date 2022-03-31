@@ -6,7 +6,7 @@ Tool that shows scores from selected map, supports mod leaderboards, all game mo
 ![image](https://user-images.githubusercontent.com/101416707/158081541-7b74d169-bb26-454c-b199-349a48c52831.png)
 
 # Options
-You can right-click anywhere on the window and you will see options, eg below.  
+You can right-click anywhere on the window and you will see options.  
 
 ![opt](https://user-images.githubusercontent.com/101416707/158661037-83ba9639-ae78-4fbb-8438-bcc282c48e7d.png)
 
