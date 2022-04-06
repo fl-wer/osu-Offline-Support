@@ -23,7 +23,7 @@ namespace Offline_Support
 
         // build version, adding new line because github adds it to their file
         // and the version is being compared with one written in github file in repo
-        public static string softwareVersion = "10\n";
+        public static string softwareVersion = "11\n";
 
         // information file names, these are files that store all
         // kind of information and are saved in software default folder in variable below
@@ -625,7 +625,7 @@ namespace Offline_Support
                     // ### signature groups
                     // they hold signature and offset that will be added so the address of
                     // signature + offset will hold the actual address of a pointer
-                    mapIdSignature[0] = new SignatureTemplate("99 F7 FE 8B F2 BB", 0x12);
+                    mapIdSignature[0] = new SignatureTemplate("99 F7 FE 8B F2 BB", 0x0C);
                     mapIdSignature[1] = new SignatureTemplate("74 05 33 D2 89 55 DC 53 8B", 0x0A);
                     mapIdSignature[2] = new SignatureTemplate("8B C8 39 09 E8 ?? ?? ?? ?? 33 D2", -0x0E);
                     mapIdSignature[3] = new SignatureTemplate("DD 9D 70 FF FF FF C7 85 6C FF FF FF 09 00 00 00 8B 0D", 0x12);
@@ -698,10 +698,6 @@ namespace Offline_Support
                     {
                         setPageText();
                         backgroundWorkerStage = 3;
-
-                        // changing status log on the form accordingly
-                        logStatus.Text = "STATUS: ALL GOOD, HAVE FUN";
-                        logStatus.ForeColor = Color.LimeGreen;
                     }
                 }
 

@@ -35,7 +35,8 @@ namespace Offline_Support
         }
 
         // open osu website with api key if user clicks on "osu! api key" label
-        private void keyLinkLab_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) { Process.Start("https://github.com/ppy/osu-api/wiki"); }
+        private void keyLinkLab_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+            { Process.Start("https://github.com/ppy/osu-api/wiki"); }
 
         // encrypt and save key to a file + restart app for easier settings saving / reading
         private void keySubmitBtn_Click(object sender, EventArgs e)
