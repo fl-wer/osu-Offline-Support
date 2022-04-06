@@ -698,6 +698,10 @@ namespace Offline_Support
                     {
                         setPageText();
                         backgroundWorkerStage = 3;
+
+                        // changing status log on the form accordingly
+                        logStatus.Text = "STATUS: ALL GOOD, HAVE FUN";
+                        logStatus.ForeColor = Color.LimeGreen;
                     }
                 }
 
