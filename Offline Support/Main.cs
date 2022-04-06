@@ -32,8 +32,9 @@ namespace Offline_Support
         public static string alwaysOnTopINF = "p44gz4";
         public static string ignoreUpdatesINF = "ev26p4";
 
-        // folder that holds all information files, it's in %TEMP%
-        string softwareFolder = "19db20f2-b775-420b-9668-02b08bd50fbc";
+        // path where all INF files are stored
+        string configFilesPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+            "\\fl-wer\\Offline Suport\\";
 
         string apiKey = ""; // holds encrypted api key that is being used to call requests to osu! api
         bool apiKeyExists = false; // being used to check if key file exists, meaning if key is saved and if key is inside too
@@ -189,13 +190,13 @@ namespace Offline_Support
             HotKeyManager.HotKeyPressed += new EventHandler<HotKeyEventArgs>(hotKeyEnableModLeaderboard);
 
             // if software folder doesn't exist = make it
-            if (!Directory.Exists(documentsPath + softwareFolder))
-                Directory.CreateDirectory(documentsPath + softwareFolder);
+            if (!Directory.Exists(configFilesPath))
+                Directory.CreateDirectory(configFilesPath);
 
             // ### load information files + settings
             // load always on top saved option
-            if (File.Exists(documentsPath + softwareFolder + "\\" + alwaysOnTopINF) &&
-            File.ReadAllText(documentsPath + softwareFolder + "\\" + alwaysOnTopINF) == "True")
+            if (File.Exists(configFilesPath + alwaysOnTopINF) &&
+            File.ReadAllText(configFilesPath + alwaysOnTopINF) == "True")
             {
                 // disable always on top for the software
                 TopMost = !TopMost;
@@ -206,7 +207,7 @@ namespace Offline_Support
             // else it will just stay on default which would just be False anyway
 
             // loading ignore updates INF file and changing context menu strip accordingly
-            string tempUpdatesINFPath = documentsPath + softwareFolder + "\\" + ignoreUpdatesINF;
+            string tempUpdatesINFPath = configFilesPath + ignoreUpdatesINF;
             if (File.Exists(tempUpdatesINFPath))
             {
                 // ignore updates enabled and saved in options therefore checkbox will be ticked
@@ -224,10 +225,10 @@ namespace Offline_Support
                 Updater.checkForUpdates();
 
             // check if api key saved and load it if so
-            if (File.Exists(documentsPath + softwareFolder + "\\" + apiKeyINF))
+            if (File.Exists(configFilesPath + apiKeyINF))
             {
                 // temporarily holds encrypted key
-                string tempApiKey = File.ReadAllText(Path.Combine(documentsPath + softwareFolder + "\\" + apiKeyINF));
+                string tempApiKey = File.ReadAllText(configFilesPath + apiKeyINF);
 
                 // simple checks to make sure there was something inside that api key file
                 if (tempApiKey != "" && tempApiKey != null)
@@ -259,16 +260,16 @@ namespace Offline_Support
             ((ToolStripMenuItem)quickSupportContextMenuStrip.Items[0]).Checked = !((ToolStripMenuItem)quickSupportContextMenuStrip.Items[0]).Checked;
 
             // save always on top option to information file so user won't have to change this every time they open program
-            if (TopMost) File.WriteAllText(documentsPath + softwareFolder + "\\" + alwaysOnTopINF, "True");
-            else File.WriteAllText(documentsPath + softwareFolder + "\\" + alwaysOnTopINF, "False");
+            if (TopMost) File.WriteAllText(configFilesPath + alwaysOnTopINF, "True");
+            else File.WriteAllText(configFilesPath + alwaysOnTopINF, "False");
         }
 
         // button on menu strip that removes key file and restarts app allowing user to type in new key
         private void resetAPIKeyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // check if api key saved and if so delete the file for key refresh
-            if (File.Exists(documentsPath + softwareFolder + "\\" + apiKeyINF))
-                File.Delete(documentsPath + softwareFolder + "\\" + apiKeyINF);
+            if (File.Exists(configFilesPath + apiKeyINF))
+                File.Delete(configFilesPath + apiKeyINF);
 
             // restart app to re-read apiKey file and obviously it won't find it on next start and ask user for it again
             Process.Start(AppDomain.CurrentDomain.FriendlyName);
@@ -282,7 +283,7 @@ namespace Offline_Support
             ((ToolStripMenuItem)quickSupportContextMenuStrip.Items[1]).Checked = !((ToolStripMenuItem)quickSupportContextMenuStrip.Items[1]).Checked;
 
             // save checkbox status for reread on next run
-            File.WriteAllText(documentsPath + softwareFolder + "\\" + ignoreUpdatesINF,
+            File.WriteAllText(configFilesPath + ignoreUpdatesINF,
             ((ToolStripMenuItem)quickSupportContextMenuStrip.Items[1]).Checked.ToString());
         }
 
@@ -311,10 +312,13 @@ namespace Offline_Support
         void hideScores() { scoresCurtain.Location = new Point(-87, -298); }
 
         // reads map id memory by reading multi level pointer
-        int readMapIdMemory(IntPtr pointer, int offset, IntPtr gameProcessHandle)
+        int readMapIdMemory(IntPtr pointer, IntPtr gameProcessHandle)
         {
             // this is actually the real pointer grabbed from game function
             IntPtr firstRead = (IntPtr)0;
+
+            // offset for the pointer itself, not signature
+            int offset = 0xCC;
 
             if (WinImported.ReadProcessMemory(gameProcessHandle, pointer, out firstRead, 0x04, out IntPtr qn5jc5))
             {
@@ -499,7 +503,7 @@ namespace Offline_Support
                     if (!isProcessOpen("osu!")) backgroundWorkerStage = 1;
 
                     // reads current mapId from memory by using mapIdPointer and specially created function
-                    int currentMapId = readMapIdMemory(mapIdPointer, 0xC8, gameProcess.Handle);
+                    int currentMapId = readMapIdMemory(mapIdPointer, gameProcess.Handle);
 
                     // reads enabled in-game mods for mod leaderboards
                     int currentEnabledMods = readEnabledModsMemory(enabledModsPointer, gameProcess.Handle);
@@ -587,7 +591,7 @@ namespace Offline_Support
                         // we are checking here if user changed map before request from osu came back
                         // this way we won't be flashing loading screen on and off with every request
                         // but rather wait for the last one and then turn off loading screen and show scores
-                        if (readMapIdMemory(mapIdPointer, 0xC8, gameProcess.Handle) == currentMapId)
+                        if (readMapIdMemory(mapIdPointer, gameProcess.Handle) == currentMapId)
                         {
                             // remove loading button because it's not doing anything anymore, all info received
                             loadingText.Location = new Point(30000, 0);
@@ -614,15 +618,17 @@ namespace Offline_Support
 
                     // manager object for all of the signature related functions + tools
                     SignatureManager signatureManager = new SignatureManager();
-                    SignatureTemplate[] mapIdSignature = new SignatureTemplate[2];
+                    SignatureTemplate[] mapIdSignature = new SignatureTemplate[4];
                     SignatureTemplate[] enabledModsSignature = new SignatureTemplate[1];
                     SignatureTemplate[] gameModeSignature = new SignatureTemplate[1];
 
                     // ### signature groups
                     // they hold signature and offset that will be added so the address of
                     // signature + offset will hold the actual address of a pointer
-                    mapIdSignature[0] = new SignatureTemplate("85 C0 74 05 33 D2 89 55 DC 53", 0x0C);
-                    mapIdSignature[1] = new SignatureTemplate("8B CE 89 4D CC 8B 4D 08", 0x14);
+                    mapIdSignature[0] = new SignatureTemplate("99 F7 FE 8B F2 BB", 0x12);
+                    mapIdSignature[1] = new SignatureTemplate("74 05 33 D2 89 55 DC 53 8B", 0x0A);
+                    mapIdSignature[2] = new SignatureTemplate("8B C8 39 09 E8 ?? ?? ?? ?? 33 D2", -0x0E);
+                    mapIdSignature[3] = new SignatureTemplate("DD 9D 70 FF FF FF C7 85 6C FF FF FF 09 00 00 00 8B 0D", 0x12);
 
                     enabledModsSignature[0] = new SignatureTemplate("DB 85 38 FF FF FF 83", 0x0E);
 
@@ -692,6 +698,10 @@ namespace Offline_Support
                     {
                         setPageText();
                         backgroundWorkerStage = 3;
+
+                        // changing status log on the form accordingly
+                        logStatus.Text = "STATUS: ALL GOOD, HAVE FUN";
+                        logStatus.ForeColor = Color.LimeGreen;
                     }
                 }
 
